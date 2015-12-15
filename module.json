@@ -12,7 +12,7 @@
   "license": "Apache-2.0",
   "targetDependencies": {
     "efm32": {
-      "wrd-touch-efm32": "^3.0.0"
+      "wrd-touch-efm32": "^4.0.0"
     }
   }
 }
