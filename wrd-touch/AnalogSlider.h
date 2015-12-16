@@ -19,121 +19,119 @@
 
 #include "mbed-drivers/mbed.h"
 
+#include "wrd-touch/AnalogSliderImplementation.h"
+
 using namespace mbed::util;
 
 class AnalogSlider
 {
 public:
-    AnalogSlider(const uint32_t* channelMap, uint32_t channelsInUse);
-    ~AnalogSlider();
-
-    uint32_t getLocation()
-    {
-        return location;
-    }
-
-    int32_t getSpeed()
-    {
-        return speed;
-    }
-
-    int32_t getAcceleration()
-    {
-        return acceleration;
-    }
-
-    bool isPressed()
-    {
-        return pressed;
-    }
-
-    void setIdleFrequency(uint32_t freqHz);
-    void setActiveFrequency(uint32_t freqHz);
+    AnalogSlider(const uint32_t* channelMap, uint32_t channelsInUse)
+        :   slider(channelMap, channelsInUse)
+    {}
 
     /*  Register callback functions
     */
+    void setCallOnPress(FunctionPointer callback)
+    {
+        slider.setCallOnPress(callback);
+    }
+
     template <typename T>
     void setCallOnPress(T* object, void (T::*member)(void))
     {
-        callOnPress.attach(object, member);
+        FunctionPointer fp(object, member);
+        slider.setCallOnPress(fp);
+    }
+
+    void setCallOnChange(FunctionPointer callback)
+    {
+        slider.setCallOnChange(callback);
     }
 
     template <typename T>
     void setCallOnChange(T* object, void (T::*member)(void))
     {
-        callOnChange.attach(object, member);
+        FunctionPointer fp(object, member);
+        slider.setCallOnChange(fp);
+    }
+
+    void setCallOnRelease(FunctionPointer callback)
+    {
+        slider.setCallOnRelease(callback);
     }
 
     template <typename T>
     void setCallOnRelease(T* object, void (T::*member)(void))
     {
-        callOnRelease.attach(object, member);
+        FunctionPointer fp(object, member);
+        slider.setCallOnRelease(fp);
     }
 
-    void setCallOnPress(FunctionPointer _callOnPress)
+    void calibrate(FunctionPointer callback)
     {
-        callOnPress = _callOnPress;
-    }
-
-    void setCallOnChange(FunctionPointer _callOnChange)
-    {
-        callOnChange = _callOnChange;
-    }
-
-    void setCallOnRelease(FunctionPointer _callOnRelease)
-    {
-        callOnRelease = _callOnRelease;
-    }
-
-    void calibrate(bool calibrateWhenActive, bool useNewValues, FunctionPointer callback)
-    {
-        calibrateCallback = callback;
-
-        calibrate(calibrateWhenActive, useNewValues);
+        slider.calibrate(callback);
     }
 
     template <typename T>
-    void calibrate(bool calibrateWhenActive, bool useNewValues, T* object, void (T::*member)(void))
+    void calibrate(T* object, void (T::*member)(void))
     {
-        calibrateCallback.attach(object, member);
-
-        calibrate(calibrateWhenActive, useNewValues);
+        FunctionPointer fp(object, member);
+        slider.calibrate(fp);
     }
 
-    void pause();
-    void resume();
+    void cancelCalibration(void)
+    {
+        slider.cancelCalibration();
+    }
+
+    uint32_t getLocation(void) const
+    {
+        return slider.getLocation();
+    }
+
+    int32_t getSpeed(void) const
+    {
+        return slider.getSpeed();
+    }
+
+    int32_t getAcceleration(void) const
+    {
+        return slider.getAcceleration();
+    }
+
+    bool isPressed(void) const
+    {
+        return slider.isPressed();
+    }
+
+    uint32_t getTimestamp(void) const
+    {
+        return slider.getTimestamp();
+    }
+
+    void setIdleFrequency(uint32_t freqHz)
+    {
+        slider.setIdleFrequency(freqHz);
+    }
+
+    void setActiveFrequency(uint32_t freqHz)
+    {
+        slider.setActiveFrequency(freqHz);
+    }
+
+    void pause(void)
+    {
+        slider.pause();
+    }
+
+    void resume(void)
+    {
+        slider.resume();
+    }
 
 private:
-    void sliderPressTask(void);
-    void sliderReleaseTask(void);
-
-    void calibrate(bool calibrateWhenActive, bool useNewValues);
-
-    void calibrateDoneTask(void)
-    {
-        if (calibrateCallback)
-        {
-            calibrateCallback.call();
-            calibrateCallback.clear();
-        }
-    }
-
-    uint32_t* channelMap;
-    const uint32_t channelsInUse;
-
-    uint32_t location;
-    int32_t speed;
-    int32_t acceleration;
-    bool pressed;
-    uint32_t eventTimestamp;
-
-    FunctionPointer callOnPress;
-    FunctionPointer callOnChange;
-    FunctionPointer callOnRelease;
-
-    FunctionPointer calibrateCallback;
+    AnalogSliderImplementation slider;
 };
 
-
 #endif // __ANALOG_SLIDER_H__
-

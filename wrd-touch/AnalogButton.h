@@ -17,66 +17,107 @@
 #ifndef __ANALOG_BUTTON_H__
 #define __ANALOG_BUTTON_H__
 
-#include "core-util/FunctionPointer.h"
+#include "mbed-drivers/mbed.h"
+
+#include "wrd-touch/AnalogButtonImplementation.h"
 
 using namespace mbed::util;
 
 class AnalogButton
 {
 public:
-    AnalogButton(uint32_t channel);
-    ~AnalogButton();
+    AnalogButton(uint32_t channel)
+        :   button(channel)
+    {}
 
-    void fall(FunctionPointer& onPress)
+    void fall(FunctionPointer callback)
     {
-        onPressHandler = onPress;
-    }
-
-    void rise(FunctionPointer& onRelease)
-    {
-        onReleaseHandler = onRelease;
+        button.fall(callback);
     }
 
     template <typename T>
     void fall(T* object, void (T::*member)(void))
     {
-        FunctionPointer callback(object, member);
+        FunctionPointer fp(object, member);
+        fall(fp);
+    }
 
-        fall(callback);
+    void rise(FunctionPointer callback)
+    {
+        button.rise(callback);
     }
 
     template <typename T>
     void rise(T* object, void (T::*member)(void))
     {
-        FunctionPointer callback(object, member);
-
-        rise(callback);
+        FunctionPointer fp(object, member);
+        rise(fp);
     }
 
-    int32_t getValue(void);
-    int32_t getMinValue(void);
-    int32_t getMaxValue(void);
+    void calibrate(FunctionPointer callback)
+    {
+        button.calibrate(callback);
+    }
+
+    template <typename T>
+    void calibrate(T* object, void (T::*member)(void))
+    {
+        FunctionPointer fp(object, member);
+        calibrate(fp);
+    }
+
+    void cancelCalibration(void)
+    {
+        button.cancelCalibration();
+    }
+
+    int32_t getValue(void) const
+    {
+        return button.getValue();
+    }
+
+    int32_t getMinValue(void) const
+    {
+        return button.getMinValue();
+    }
+
+    int32_t getMaxValue(void) const
+    {
+        return button.getMaxValue();
+    }
+
+    bool isPressed(void) const
+    {
+        return button.isPressed();
+    }
+
+    uint32_t getTimestamp(void) const
+    {
+        return button.getTimestamp();
+    }
+
+    void setIdleFrequency(uint32_t freqHz)
+    {
+        button.setIdleFrequency(freqHz);
+    }
+
+    void setActiveFrequency(uint32_t freqHz)
+    {
+        button.setActiveFrequency(freqHz);
+    }
+
+    void pause(void)
+    {
+        button.pause();
+    }
+
+    void resume(void)
+    {
+        button.resume();
+    }
 
 private:
-    void onPressTask()
-    {
-        if (onPressHandler)
-        {
-            onPressHandler.call();
-        }
-    }
-
-    void onReleaseTask()
-    {
-        if (onReleaseHandler)
-        {
-            onReleaseHandler.call();
-        }
-    }
-
-    uint32_t channel;
-    FunctionPointer onPressHandler;
-    FunctionPointer onReleaseHandler;
+    AnalogButtonImplementation button;
 };
 
 #endif // __ANALOG_BUTTON_H__
