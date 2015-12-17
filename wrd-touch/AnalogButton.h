@@ -26,8 +26,8 @@ using namespace mbed::util;
 class AnalogButton
 {
 public:
-    AnalogButton(uint32_t channel)
-        :   button(channel)
+    AnalogButton(uint32_t channel, bool multipleUpdates = false)
+        :   button(channel, multipleUpdates)
     {}
 
     void fall(FunctionPointer callback)

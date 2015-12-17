@@ -47,7 +47,7 @@ ButtonsToSlider::ButtonsToSlider(const uint32_t* _channelMap, uint32_t _channels
     for (std::size_t idx = 0; idx < channelsInUse; idx++)
     {
         channelMap[idx] = _channelMap[idx];
-        buttons[idx] = new AnalogButton(channelMap[idx]);
+        buttons[idx] = new AnalogButton(channelMap[idx], true);
 
         buttons[idx]->fall(onPress);
         buttons[idx]->rise(onRelease);
