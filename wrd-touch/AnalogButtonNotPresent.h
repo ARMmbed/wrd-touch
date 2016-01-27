@@ -14,118 +14,101 @@
  * limitations under the License.
  */
 
-#ifndef __ANALOG_BUTTON_H__
-#define __ANALOG_BUTTON_H__
+#ifndef __ANALOG_BUTTON_NOT_PRESENT_H__
+#define __ANALOG_BUTTON_NOT_PRESENT_H__
 
 #include "mbed-drivers/mbed.h"
 
-#if YOTTA_CFG_HARDWARE_WEARABLE_REFERENCE_DESIGN_TOUCH_PRESENT
-#include "wrd-touch/AnalogButtonImplementation.h"
-#else
-#include "wrd-touch/AnalogButtonNotPresent.h"
-#endif
-
 using namespace mbed::util;
 
-class AnalogButton
+class AnalogButtonNotPresent
 {
 public:
-    AnalogButton(uint32_t channel, bool multipleUpdates = false)
-        :   button(channel, multipleUpdates)
-    {}
+    AnalogButtonNotPresent(uint32_t channel, bool multipleUpdates = false)
+    {
+        (void) channel;
+        (void) multipleUpdates;
+    }
 
     void fall(FunctionPointer callback)
     {
-        button.fall(callback);
+        (void) callback;
     }
 
     template <typename T>
     void fall(T* object, void (T::*member)(void))
     {
-        FunctionPointer fp(object, member);
-        fall(fp);
+        (void) object;
+        (void) member;
     }
 
     void rise(FunctionPointer callback)
     {
-        button.rise(callback);
+        (void) callback;
     }
 
     template <typename T>
     void rise(T* object, void (T::*member)(void))
     {
-        FunctionPointer fp(object, member);
-        rise(fp);
+        (void) object;
+        (void) member;
     }
 
     void calibrate(FunctionPointer callback)
     {
-        button.calibrate(callback);
+        (void) callback;
     }
 
     template <typename T>
     void calibrate(T* object, void (T::*member)(void))
     {
-        FunctionPointer fp(object, member);
-        calibrate(fp);
+        (void) object;
+        (void) member;
     }
 
     void cancelCalibration(void)
-    {
-        button.cancelCalibration();
-    }
+    { }
 
     int32_t getValue(void) const
     {
-        return button.getValue();
+        return 0;
     }
 
     int32_t getMinValue(void) const
     {
-        return button.getMinValue();
+        return 0;
     }
 
     int32_t getMaxValue(void) const
     {
-        return button.getMaxValue();
+        return 0;
     }
 
     bool isPressed(void) const
     {
-        return button.isPressed();
+        return false;
     }
 
     uint32_t getTimestamp(void) const
     {
-        return button.getTimestamp();
+        return 0;
     }
 
     void setIdleFrequency(uint32_t freqHz)
     {
-        button.setIdleFrequency(freqHz);
+        (void) freqHz;
     }
 
     void setActiveFrequency(uint32_t freqHz)
     {
-        button.setActiveFrequency(freqHz);
+        (void) freqHz;
     }
 
     void pause(void)
-    {
-        button.pause();
-    }
+    { }
 
     void resume(void)
-    {
-        button.resume();
-    }
-
-private:
-#if YOTTA_CFG_HARDWARE_WEARABLE_REFERENCE_DESIGN_TOUCH_PRESENT
-    AnalogButtonImplementation button;
-#else
-    AnalogButtonNotPresent button;
-#endif
+    { }
 };
 
-#endif // __ANALOG_BUTTON_H__
+#endif // __ANALOG_BUTTON_NOT_PRESENT_H__
