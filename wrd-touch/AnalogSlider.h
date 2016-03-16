@@ -19,7 +19,7 @@
 
 #include "mbed-drivers/mbed.h"
 
-#if YOTTA_CFG_HARDWARE_WEARABLE_REFERENCE_DESIGN_TOUCH_PRESENT
+#if YOTTA_CFG_HARDWARE_WRD_TOUCH_PRESENT
 #include "wrd-touch/AnalogSliderImplementation.h"
 #else
 #include "wrd-touch/AnalogSliderNotPresent.h"
@@ -135,7 +135,7 @@ public:
     }
 
 private:
-#if YOTTA_CFG_HARDWARE_WEARABLE_REFERENCE_DESIGN_TOUCH_PRESENT
+#if YOTTA_CFG_HARDWARE_WRD_TOUCH_PRESENT
     AnalogSliderImplementation slider;
 #else
     AnalogSliderNotPresent slider;

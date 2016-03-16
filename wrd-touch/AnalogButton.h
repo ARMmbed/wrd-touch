@@ -19,7 +19,7 @@
 
 #include "mbed-drivers/mbed.h"
 
-#if YOTTA_CFG_HARDWARE_WEARABLE_REFERENCE_DESIGN_TOUCH_PRESENT
+#if YOTTA_CFG_HARDWARE_WRD_TOUCH_PRESENT
 #include "wrd-touch/AnalogButtonImplementation.h"
 #else
 #include "wrd-touch/AnalogButtonNotPresent.h"
@@ -121,7 +121,7 @@ public:
     }
 
 private:
-#if YOTTA_CFG_HARDWARE_WEARABLE_REFERENCE_DESIGN_TOUCH_PRESENT
+#if YOTTA_CFG_HARDWARE_WRD_TOUCH_PRESENT
     AnalogButtonImplementation button;
 #else
     AnalogButtonNotPresent button;
